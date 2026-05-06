@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paper Extractor Helper</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #0066cc;
+        }
+        .instructions {
+            background: #e6f2ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin: 10px 0;
+        }
+        button {
+            background: #0066cc;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #ff6600;
+        }
+        #output {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 5px;
+            display: none;
+        }
+        .paper-entry {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #0066cc;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Google Scholar Paper Extractor</h1>
+        
+        <div class="instructions">
+            <h2>Instructions:</h2>
+            <ol>
+                <li>Open the Google Scholar profile: <a href="https://scholar.google.com/citations?user=hLBNWsYAAAAJ&hl=en" target="_blank">https://scholar.google.com/citations?user=hLBNWsYAAAAJ&hl=en</a></li>
+                <li>Open browser console (F12 or Cmd+Option+I)</li>
+                <li>Copy and paste the script below into the console</li>
+                <li>Press Enter and copy the output</li>
+                <li>Paste the output in the textarea below and click "Format Papers"</li>
+            </ol>
+        </div>
+
+        <h3>Console Script:</h3>
+        <div class="code-block" id="scriptCode">
+// Copy this entire script to browser console on Google Scholar page
+(function() {
+    const papers = [];
+    const rows = document.querySelectorAll('tr.gsc_a_tr');
+    
+    rows.forEach((row, idx) => {
+        const titleLink = row.querySelector('a.gsc_a_at');
+        if (!titleLink) return;
+        
+        const title = titleLink.textContent.trim();
+        const link = titleLink.href || `https://scholar.google.com${titleLink.getAttribute('href')}`;
+        
+        const authorsVenue = row.querySelector('div.gs_gray');
+        let authors = '', venue = '';
+        if (authorsVenue) {
+            const text = authorsVenue.textContent.trim();
+            const parts = text.split(' - ');
+            authors = parts[0]?.trim() || '';
+            venue = parts[1]?.trim() || '';
+        }
+        
+        const yearSpan = row.querySelector('span.gsc_a_y');
+        const year = yearSpan ? parseInt(yearSpan.textContent.trim()) : null;
+        
+        papers.push({
+            id: idx + 1,
+            title: title,
+            authors: authors,
+            venue: venue,
+            year: year,
+            link: link
+        });
+    });
+    
+    console.log(JSON.stringify(papers, null, 2));
+    return papers;
+})();
+        </div>
+        <button onclick="copyScript()">Copy Script</button>
+
+        <h3>Paste Extracted Data Here:</h3>
+        <textarea id="inputData" style="width: 100%; height: 200px; font-family: monospace; padding: 10px;" placeholder='Paste the JSON output from console here...'></textarea>
+        
+        <button onclick="formatPapers()">Format Papers for papers.js</button>
+        <button onclick="clearOutput()">Clear</button>
+
+        <div id="output"></div>
+    </div>
+
+    <script>
+        function copyScript() {
+            const script = document.getElementById('scriptCode').textContent;
+            navigator.clipboard.writeText(script).then(() => {
+                alert('Script copied to clipboard!');
+            });
+        }
+
+        function getTags(title, venue) {
+            const titleLower = (title || '').toLowerCase();
+            const venueLower = (venue || '').toLowerCase();
+            const combined = titleLower + ' ' + venueLower;
+            
+            const tags = [];
+            if (combined.includes('machine learning') || combined.includes('ml ')) tags.push('machine-learning');
+            if (combined.includes('deep learning') || combined.includes('neural network') || combined.includes('cnn') || combined.includes('rnn') || combined.includes('lstm')) tags.push('deep-learning');
+            if (combined.includes('artificial intelligence') || combined.includes(' ai ') || combined.includes('artificial intelligence')) tags.push('artificial-intelligence');
+            if (combined.includes('data science') || combined.includes('data analytics') || combined.includes('big data')) tags.push('data-science');
+            if (combined.includes('bioinformatics') || combined.includes('biology') || combined.includes('genomic') || combined.includes('protein') || combined.includes('evolution') || combined.includes('molecular')) tags.push('bioinformatics');
+            if (combined.includes('cybersecurity') || combined.includes('security') || combined.includes('intrusion') || combined.includes('attack')) tags.push('cybersecurity');
+            if (combined.includes('explainable') || combined.includes('interpretable') || combined.includes('xai')) tags.push('explainable-ai');
+            if (combined.includes('responsible') || combined.includes('ethical') || combined.includes('fairness')) tags.push('responsible-ai');
+            if (combined.includes('iot') || combined.includes('internet of things')) tags.push('iot');
+            if (combined.includes('healthcare') || combined.includes('medical') || combined.includes('clinical') || combined.includes('diagnosis') || combined.includes('health')) tags.push('healthcare');
+            
+            if (tags.length === 0) {
+                tags.push('machine-learning', 'artificial-intelligence');
+            }
+            
+            return tags;
+        }
+
+        function formatPapers() {
+            const input = document.getElementById('inputData').value.trim();
+            if (!input) {
+                alert('Please paste the extracted data first!');
+                return;
+            }
+
+            try {
+                const papers = JSON.parse(input);
+                const output = document.getElementById('output');
+                output.style.display = 'block';
+                
+                let formatted = '// Prof. Raja Hashim Ali Papers\n';
+                formatted += 'const rajaHashimAliPapers = [\n';
+                
+                papers.forEach((paper, idx) => {
+                    const tags = getTags(paper.title, paper.venue);
+                    const currentId = 100 + idx; // Start from 100 to avoid conflicts
+                    
+                    formatted += `    {\n`;
+                    formatted += `        id: ${currentId},\n`;
+                    formatted += `        title: "${paper.title.replace(/"/g, '\\"')}",\n`;
+                    formatted += `        authors: "${paper.authors.replace(/"/g, '\\"')}",\n`;
+                    formatted += `        venue: "${(paper.venue || 'N/A').replace(/"/g, '\\"')}",\n`;
+                    formatted += `        year: ${paper.year || new Date().getFullYear()},\n`;
+                    formatted += `        tags: [${tags.map(t => `"${t}"`).join(', ')}],\n`;
+                    formatted += `        scholarLink: "${paper.link}"\n`;
+                    formatted += `    }${idx < papers.length - 1 ? ',' : ''}\n`;
+                });
+                
+                formatted += '];\n\n';
+                formatted += '// Add to researchPapers array:\n';
+                formatted += '// researchPapers.push(...rajaHashimAliPapers);\n';
+                
+                output.innerHTML = `
+                    <h3>Formatted Output (Copy this to papers.js):</h3>
+                    <div class="code-block" style="max-height: 500px; overflow-y: auto;">${formatted}</div>
+                    <button onclick="copyFormatted()">Copy Formatted Code</button>
+                `;
+                
+                window.formattedCode = formatted;
+            } catch (e) {
+                alert('Error parsing data. Make sure you pasted valid JSON. Error: ' + e.message);
+            }
+        }
+
+        function copyFormatted() {
+            if (window.formattedCode) {
+                navigator.clipboard.writeText(window.formattedCode).then(() => {
+                    alert('Formatted code copied to clipboard!');
+                });
+            }
+        }
+
+        function clearOutput() {
+            document.getElementById('inputData').value = '';
+            document.getElementById('output').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

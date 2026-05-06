@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Publications - iHubMids</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="papers.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-wrapper">
+                <div class="logo">
+                    <a href="index.html" style="text-decoration: none; color: inherit;">
+                        <h1>iHubMids</h1>
+                        <span class="tagline">Innovation Hub for Machine Intelligence and Data Science</span>
+                        <span class="ue-brand">@ UE Innovation Hub</span>
+                    </a>
+                </div>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="index.html#about" class="nav-link">About</a></li>
+                    <li><a href="index.html#team" class="nav-link">Team</a></li>
+                    <li><a href="index.html#research" class="nav-link">Research</a></li>
+                    <li><a href="research-papers.html" class="nav-link active">Publications</a></li>
+                    <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+                </ul>
+                <div class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Research Papers Header -->
+    <section class="papers-hero">
+        <div class="container">
+            <div class="papers-header">
+                <h1 class="papers-title">Publications</h1>
+                <p class="papers-subtitle">Explore our published research in Machine Learning, Artificial Intelligence, and Data Science</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filter Section -->
+    <section class="filter-section">
+        <div class="container">
+            <div class="filter-wrapper">
+                <div class="filter-label">
+                    <span>Filter by Research Area:</span>
+                </div>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">All Papers</button>
+                    <button class="filter-btn" data-filter="machine-learning">Machine Learning</button>
+                    <button class="filter-btn" data-filter="artificial-intelligence">Artificial Intelligence</button>
+                    <button class="filter-btn" data-filter="data-science">Data Science</button>
+                    <button class="filter-btn" data-filter="deep-learning">Deep Learning</button>
+                    <button class="filter-btn" data-filter="bioinformatics">Bioinformatics</button>
+                    <button class="filter-btn" data-filter="cybersecurity">Cybersecurity</button>
+                    <button class="filter-btn" data-filter="responsible-ai">Responsible AI</button>
+                    <button class="filter-btn" data-filter="explainable-ai">Explainable AI</button>
+                    <button class="filter-btn" data-filter="iot">IoT</button>
+                    <button class="filter-btn" data-filter="healthcare">Healthcare</button>
+                </div>
+            </div>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search papers by title, author, or keywords..." class="search-input">
+                <span class="search-icon">🔍</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Papers List Section -->
+    <section class="papers-section">
+        <div class="container">
+            <div class="papers-stats">
+                <span id="paperCount">0</span> papers found
+            </div>
+            <div class="papers-grid" id="papersGrid">
+                <!-- Papers will be dynamically inserted here -->
+            </div>
+            <div class="no-results" id="noResults" style="display: none;">
+                <p>No papers found matching your criteria.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>iHubMids</h3>
+                    <p>Innovation Hub for Machine Intelligence and Data Science</p>
+                    <p class="footer-location">University of Europe for Applied Sciences<br>Innovation Hub<br>Konrad-Zuse-Ring 11<br>D-14469 Potsdam, Germany</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="index.html#about">About</a></li>
+                        <li><a href="index.html#team">Team</a></li>
+                        <li><a href="index.html#research">Research</a></li>
+                        <li><a href="research-papers.html">Publications</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Research Areas</h4>
+                    <ul>
+                        <li>Machine Learning</li>
+                        <li>Artificial Intelligence</li>
+                        <li>Data Science</li>
+                        <li>Bioinformatics</li>
+                        <li>Cybersecurity</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 iHubMids - University of Europe for Applied Sciences. All rights reserved.</p>
+                <p style="margin-top: 0.5rem; font-size: 0.9rem;">
+                    <a href="https://www.ue-germany.com/de/standorte/innovation-hub" target="_blank" style="color: rgba(255, 255, 255, 0.8); text-decoration: none;">UE Innovation Hub</a> | 
+                    <a href="https://www.ue-germany.com" target="_blank" style="color: rgba(255, 255, 255, 0.8); text-decoration: none;">University of Europe for Applied Sciences</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="papers.js"></script>
+</body>
+</html>
